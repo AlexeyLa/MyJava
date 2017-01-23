@@ -20,15 +20,26 @@ public class LeeMaze {
 							                   {1, 1, 1, 0, 0, 1, 1, 0},
 							                   {0, 0, 0, 1, 0, 1, 0, 1},
 							                   {1, 1, 1, 1, 0, 1, 1, 1}};
+    private static int [][] mazeClear = new int[][]{{0, 0, 0, 0, 0, 0, 0, 0},
+										       {0, 0, 0, 0, 0, 0, 0, 0},
+										       {0, 0, 0, 0, 0, 0, 0, 0},
+										       {0, 0, 0, 0, 0, 0, 0, 0},
+										       {0, 0, 0, 0, 0, 0, 0, 0},
+										       {0, 0, 0, 0, 0, 0, 0, 0},
+										       {0, 0, 0, 0, 0, 0, 0, 0}};
 	
-void startWave()
+static void startWave(int [][] pointsArray, int [][] waveMap, int step)
 {
-	
+	for (int i = 0; i < pointsArray[0].length; i++){
+		int row = pointsArray[0][i];
+		int col = pointsArray[1][i];
+		if (waveMap[row][col] == 0) waveMap[row][col] = step + 1;
+	}
 }
 
 static void showMaze(int [][] maze)
 {
-	for (int i =0; i< maze.length; i++){
+	for (int i = 0; i< maze.length; i++){
 		System.out.println();
 		for (int j=0; j < maze[0].length; j++){
 			System.out.print(maze[i][j]);
@@ -36,72 +47,72 @@ static void showMaze(int [][] maze)
 	}
 }
 
-
-
 static int[][] getNeighbors (int [][] pointsArray, int [][] maze)
 {
 	int [][] neighbors = new int [2][maze.length*maze[0].length];
 	int numNeighbors = -1;
+	System.out.println(" Amount of neighbors " + numNeighbors);
+	System.out.println(" number of starting points " + pointsArray[0].length);
 	for (int i = 0; i < pointsArray[0].length; i++){
-		int y = pointsArray[0][i];
-		int x = pointsArray[1][i];
-		System.out.println(maze[x + 1][y]);
-		System.out.println(maze[x - 1][y]);
-		System.out.println(maze[x][y + 1]);
-		System.out.println(maze[x][y - 1]);
-		if (maze[x + 1][y] == 0) 
+		int row = pointsArray[0][i];
+		int col = pointsArray[1][i];
+		if (maze[row + 1][col] == 0) 
 			{numNeighbors++;
-			 neighbors[0][numNeighbors] = x + 1;
-			 neighbors[1][numNeighbors] = y;
+			 neighbors[0][numNeighbors] = row + 1;
+			 neighbors[1][numNeighbors] = col;
 			}
-		if (maze[x - 1][y] == 0)
+		if (maze[row - 1][col] == 0)
 			{numNeighbors++;
-			neighbors[0][numNeighbors] = x - 1;
-			neighbors[1][numNeighbors] = y;
+			neighbors[0][numNeighbors] = row - 1;
+			neighbors[1][numNeighbors] = col;
 			}
-		if (maze[x][y + 1] == 0) numNeighbors++;
+		if (maze[row][col + 1] == 0)
 			{numNeighbors++;
-			neighbors[0][numNeighbors] = x ;
-			neighbors[1][numNeighbors] = y + 1;
+			neighbors[0][numNeighbors] = row;
+			neighbors[1][numNeighbors] = col + 1;
 			}
-		if (maze[x][y - 1] == 0) numNeighbors++;
+		if (maze[row][col - 1] == 0)
 			{numNeighbors++;
-			neighbors[0][numNeighbors] = x;
-			neighbors[1][numNeighbors] = y - 1;
+			neighbors[0][numNeighbors] = row;
+			neighbors[1][numNeighbors] = col - 1;
 			}
 	}
-	return neighbors;
-}
+	System.out.println(" Amount of neighbors " + (numNeighbors + 1));
 	
+	int [][] cutNhbrs = new int [2][numNeighbors + 1];
+	for(int i = 0; i < 2; i++){
+		for(int j=0; j < numNeighbors + 1; j++){
+			cutNhbrs[i][j] = neighbors[i][j];
+		}
+	}
+	
+	return cutNhbrs;
+}
+
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int [][] curNeighbors;
-		int [][] startPoint = new int[][]{{1},{1}};
+		
+		int [][] startPoint = new int[][]{{3},{3}};
 		int [][] waveMap = new int[maze.length][maze[0].length];
 		for (int i=0; i< maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++){
 					waveMap[i][j] = 0;
 				}
 			}
-		
+	//	curNeighbors = getNeighbors(startPoint, maze);
+/*		for (int i=0; i< curNeighbors[0].length; i++){
+			System.out.println(" Coordinates are : " + curNeighbors[0][i] + "," + curNeighbors[1][i]);
+		}*/
+	//	startWave(curNeighbors, waveMap);
 		showMaze(waveMap);
 
-		int [][] testArray = new int [][]{{3,4,3,2,1,5},
-									      {5,5,6,7,2,4}};
-		
-		for (int i = 0; i< testArray.length; i++){
-			System.out.println();
-			for (int j = 0; j < testArray[0].length; j++){
-				System.out.print(testArray[i][j]);
-			}
-		}
-		curNeighbors = getNeighbors(startPoint, waveMap);
-		for (int i=0; i< curNeighbors.length; i++){
-			for (int j=0; j< curNeighbors[0].length; j++){
-				System.out.println(curNeighbors[i][j]);
-			}
-		}
-		
+		for (int k = 0; k < 2; k++){
+			int [][] curNeighbors;
+			curNeighbors = getNeighbors(startPoint, mazeClear);
+			startWave(curNeighbors, waveMap, k);
+			showMaze(waveMap);
+			startPoint = curNeighbors;	
+		}		
 	}	
 }
